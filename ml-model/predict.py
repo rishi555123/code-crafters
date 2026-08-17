@@ -1,4 +1,3 @@
-
 import joblib
 import pandas as pd
 
@@ -25,17 +24,22 @@ model = joblib.load(MODEL_PATH)
 
 def predict_risk(values):
 
+    if len(values) != len(FEATURES):
+        raise ValueError(
+            f"Expected {len(FEATURES)} features, got {len(values)}"
+        )
+
     input_data = pd.DataFrame(
         [values],
         columns=FEATURES
     )
 
-    prediction = model.predict(input_data)[0]
+    prediction = int(model.predict(input_data)[0])
 
     probabilities = model.predict_proba(input_data)[0]
 
     return {
-        "class": int(prediction),
-        "risk": CLASS_NAMES[prediction],
-        "confidence": float(max(probabilities))
-    }
+    "risk_class": prediction,
+    "risk_level": CLASS_NAMES[prediction],
+    "confidence": float(max(probabilities))
+}
