@@ -1,17 +1,25 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from io import BytesIO
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from PIL import Image
 
-from inference import analyze_image, load_model
+from inference import (
+    PIXELS_PER_MM,
+    analyze_image,
+    load_model,
+)
 
 
 app = FastAPI(title="Computer Vision Inference API")
 
 MODEL = load_model()
+
+REFERENCE_DETECTIONS: dict[str, list[dict]] = {}
 
 
 @app.get("/health")
@@ -31,20 +39,14 @@ async def analyze(
             detail="No image provided",
         )
 
-    content_type = image.content_type or ""
+    image_data = await image.read()
 
-    if not content_type.startswith("image/"):
+    try:
+        Image.open(BytesIO(image_data)).verify()
+    except Exception:
         raise HTTPException(
             status_code=400,
-            detail="Invalid image file",
-        )
-
-    data = await image.read()
-
-    if not data:
-        raise HTTPException(
-            status_code=400,
-            detail="Empty image file",
+            detail="Uploaded file is not a valid image",
         )
 
     suffix = Path(image.filename).suffix or ".jpg"
@@ -53,27 +55,25 @@ async def analyze(
         suffix=suffix,
         delete=False,
     ) as temp_file:
-
-        temp_file.write(data)
+        temp_file.write(image_data)
         temp_path = temp_file.name
 
     try:
+        reference_detections = REFERENCE_DETECTIONS.get(
+            zone_id
+        )
 
-        try:
-            result = analyze_image(
-                temp_path,
-                model=MODEL,
-            )
+        result = analyze_image(
+            image_path=temp_path,
+            model=MODEL,
+            reference_detections=reference_detections,
+            pixels_per_mm=PIXELS_PER_MM,
+        )
 
-        except Exception as exc:
+        current_detections = result["detections"]
 
-            raise HTTPException(
-                status_code=500,
-                detail={
-                    "error": "CV_INFERENCE_FAILED",
-                    "message": "Unable to process the supplied image.",
-                },
-            ) from exc
+        if zone_id not in REFERENCE_DETECTIONS:
+            REFERENCE_DETECTIONS[zone_id] = current_detections
 
         return {
             "zone_id": zone_id,
