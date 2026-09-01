@@ -1,0 +1,763 @@
+{
+  "info": {
+    "name": "Rockfall Prediction API",
+    "_postman_id": "rockfall-prediction-api-2026",
+    "description": "API test collection for the AI-Based Rockfall Prediction & Alert System.\n\nREAL APIs (working system):\n  - POST /api/analysis/cv  (multipart image + zone_id) on the Spring Boot backend\n  - GET  /api/analysis/risk/{zoneId}\n  - Health checks for CV and ML services\n\nMOCK/FUTURE APIs (standalone mock server at :8001):\n  - telemetry, cv-results, predictions, risk status, incidents, zones, rockfall events\n\nReal backend services:\n  - Spring Boot backend:  http://localhost:8080\n  - CV service:          http://localhost:8000\n  - ML risk engine:      http://127.0.0.1:9000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "realBackendUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "cvUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "mlUrl",
+      "value": "http://127.0.0.1:9000"
+    },
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8001"
+    },
+    {
+      "key": "apiKey",
+      "value": ""
+    },
+    {
+      "key": "zoneId",
+      "value": "SLOPE_A"
+    }
+  ],
+  "item": [
+    {
+      "name": "Real Backend - Analysis",
+      "description": "Endpoints implemented in the real Spring Boot backend (/api/analysis).",
+      "item": [
+        {
+          "name": "Analyze Image (CV + ML)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains cvResult', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('cvResult');",
+                  "    pm.expect(json.cvResult).to.have.property('crack_detected');",
+                  "    pm.expect(json.cvResult).to.have.property('crack_severity');",
+                  "    pm.expect(json.cvResult).to.have.property('deformation_mm');",
+                  "    pm.expect(json.cvResult).to.have.property('crack_confidence');",
+                  "});",
+                  "",
+                  "pm.test('Response contains riskResult', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('riskResult');",
+                  "    pm.expect(json.riskResult).to.have.property('risk_class');",
+                  "    pm.expect(json.riskResult).to.have.property('risk_level');",
+                  "    pm.expect(json.riskResult).to.have.property('confidence');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{realBackendUrl}}/api/analysis/cv",
+              "host": ["{{realBackendUrl}}"],
+              "path": ["api", "analysis", "cv"]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "zone_id",
+                  "value": "{{zoneId}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Analyze Risk By Zone",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains risk fields', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('risk_class');",
+                  "    pm.expect(json).to.have.property('risk_level');",
+                  "    pm.expect(json).to.have.property('confidence');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{realBackendUrl}}/api/analysis/risk/{{zoneId}}",
+              "host": ["{{realBackendUrl}}"],
+              "path": ["api", "analysis", "risk", "{{zoneId}}"]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services - Health Checks",
+      "description": "Health/availability checks for the backend, CV service, and ML risk engine.",
+      "item": [
+        {
+          "name": "CV Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('CV reports ok', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql('ok');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{cvUrl}}/health",
+              "host": ["{{cvUrl}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "ML Risk Engine Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('ML reports healthy', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql('healthy');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{mlUrl}}/health",
+              "host": ["{{mlUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mock/Future API Tests",
+      "description": "",
+      "item": [
+        {
+          "name": "Mock Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains status field', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('status');",
+                  "    pm.expect(json.status).to.eql('ok');",
+                  "});",
+                  "",
+                  "pm.test('Response contains service field', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('service');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Mock List Zones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains zones array', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('zones');",
+                  "    pm.expect(json.zones).to.be.an('array');",
+                  "    pm.expect(json.zones.length).to.be.greaterThan(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/zones",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "zones"]
+            },
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "Mock Post Telemetry — SAFE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains zone_id and risk_state', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('zone_id');",
+                  "    pm.expect(json).to.have.property('risk_state');",
+                  "});",
+                  "",
+                  "pm.test('Risk level is LOW for safe conditions', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.risk_state.risk_level).to.eql('LOW');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/telemetry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "telemetry"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone_id\": \"{{zoneId}}\",\n  \"rainfall_mm\": 3.0,\n  \"humidity\": 60.0,\n  \"temperature\": 30.0,\n  \"vibration\": 1.2\n}"
+            }
+          }
+        },
+        {
+          "name": "Mock Post Telemetry — WARNING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Risk level is MEDIUM for warning conditions', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.risk_state.risk_level).to.eql('MEDIUM');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/telemetry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "telemetry"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone_id\": \"{{zoneId}}\",\n  \"rainfall_mm\": 20.0,\n  \"humidity\": 78.0,\n  \"temperature\": 28.0,\n  \"vibration\": 3.5\n}"
+            }
+          }
+        },
+        {
+          "name": "Mock Post Telemetry — CRITICAL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Risk level is HIGH for critical conditions', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.risk_state.risk_level).to.eql('HIGH');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/telemetry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "telemetry"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone_id\": \"{{zoneId}}\",\n  \"rainfall_mm\": 42.0,\n  \"humidity\": 90.0,\n  \"temperature\": 26.0,\n  \"vibration\": 7.0\n}"
+            }
+          }
+        },
+        {
+          "name": "Mock Post CV Results — SAFE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains cv-relevant fields', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('zone_id');",
+                  "    pm.expect(json).to.have.property('risk_state');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/cv-results",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cv-results"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone_id\": \"{{zoneId}}\",\n  \"crack_detected\": false,\n  \"crack_severity\": \"NONE\",\n  \"deformation_mm\": 2.0,\n  \"crack_confidence\": 0.10\n}"
+            }
+          }
+        },
+        {
+          "name": "Mock Post CV Results — CRITICAL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Risk level reflects high severity CV data', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json.risk_state.risk_level).to.eql('HIGH');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/cv-results",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cv-results"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone_id\": \"{{zoneId}}\",\n  \"crack_detected\": true,\n  \"crack_severity\": \"HIGH\",\n  \"deformation_mm\": 12.0,\n  \"crack_confidence\": 0.88\n}"
+            }
+          }
+        },
+        {
+          "name": "Mock Run Prediction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains prediction', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('prediction');",
+                  "    pm.expect(json.prediction).to.have.property('risk_level');",
+                  "    pm.expect(json.prediction).to.have.property('risk_score');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/predictions",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "predictions"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone_id\": \"{{zoneId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mock Get Current Risk — All Zones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains zones array', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('zones');",
+                  "    pm.expect(json.zones).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/risk/current",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "risk", "current"]
+            },
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "Mock Get Current Risk — Specific Zone",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains zone data', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('zones');",
+                  "    pm.expect(json.zones).to.be.an('array');",
+                  "    pm.expect(json.zones.length).to.eql(1);",
+                  "    pm.expect(json.zones[0].zone_id).to.eql('{{zoneId}}');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/risk/current?zone_id={{zoneId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "risk", "current"],
+              "query": [
+                {
+                  "key": "zone_id",
+                  "value": "{{zoneId}}"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "Mock Get Incidents",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains incidents array', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('incidents');",
+                  "    pm.expect(json).to.have.property('total');",
+                  "    pm.expect(json.incidents).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/incidents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "incidents"]
+            },
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ]
+          }
+        },
+        {
+          "name": "Mock Record Rockfall Event",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains incident', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('incident');",
+                  "    pm.expect(json.incident).to.have.property('event_type');",
+                  "    pm.expect(json.incident.event_type).to.eql('ROCKFALL_EVENT');",
+                  "    pm.expect(json.incident).to.have.property('zone_id');",
+                  "    pm.expect(json.incident.zone_id).to.eql('{{zoneId}}');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/rockfall/event",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rockfall", "event"]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone_id\": \"{{zoneId}}\",\n  \"magnitude\": 4.5,\n  \"description\": \"Test rockfall event from Postman collection\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Mock Get Rockfall History",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains events array', function () {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('events');",
+                  "    pm.expect(json).to.have.property('total');",
+                  "    pm.expect(json.events).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/rockfall/history",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "rockfall", "history"]
+            },
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "disabled": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
