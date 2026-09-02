@@ -42,28 +42,28 @@ export default function ZoneDetailsPage({
   return (
     <div className="space-y-6">
       {/* Top Breadcrumbs & Sector Header */}
-      <div className="bg-slate-950/90 rounded-2xl border border-slate-800 p-5 shadow-2xl backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white/90 rounded-2xl border border-slate-200 p-5 shadow-sm backdrop-blur-md flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400 mb-1">
-            <Link to="/" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-500 mb-1">
+            <Link to="/" className="hover:text-cyan-600 transition-colors flex items-center gap-1">
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Dashboard</span>
             </Link>
             <span>/</span>
             <span>Sectors</span>
             <span>/</span>
-            <span className="text-cyan-400 font-bold">{currentZone?.zone_id || currentZone?.id}</span>
+            <span className="text-cyan-600 font-bold">{currentZone?.zone_id || currentZone?.id}</span>
           </div>
 
           <div className="flex items-center gap-3">
-            <h1 className="text-xl md:text-2xl font-black text-white tracking-tight">
+            <h1 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">
               {currentZone?.zone_name || currentZone?.name || currentZone?.zone_id}
             </h1>
             <span className={`px-3 py-1 rounded-lg border text-xs font-mono font-extrabold uppercase tracking-wider ${
-              isStale ? 'bg-slate-800 text-slate-300 border-slate-700' :
-              riskLevel === 'HIGH' ? 'bg-red-950 text-red-300 border-red-800 animate-pulse' :
-              riskLevel === 'MEDIUM' ? 'bg-amber-950 text-amber-300 border-amber-800' :
-              'bg-emerald-950 text-emerald-300 border-emerald-800'
+              isStale ? 'bg-slate-50 text-slate-600 border-slate-200' :
+              riskLevel === 'HIGH' ? 'bg-red-50 text-red-700 border-red-200 animate-pulse' :
+              riskLevel === 'MEDIUM' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+              'bg-emerald-50 text-emerald-700 border-emerald-200'
             }`}>
               {isStale ? 'STALE' : `${riskLevel} RISK`}
             </span>
@@ -74,7 +74,7 @@ export default function ZoneDetailsPage({
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(`/zone/${prevZone.zone_id || prevZone.id}`)}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-mono text-slate-300"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-mono text-slate-600"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Prev</span>
@@ -82,7 +82,7 @@ export default function ZoneDetailsPage({
 
           <button
             onClick={() => onOpenCVModal()}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs font-mono shadow-md shadow-cyan-950/60"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs font-mono shadow-md shadow-cyan-950/60"
           >
             <Camera className="w-4 h-4" />
             <span>CV Camera Inspect</span>
@@ -90,7 +90,7 @@ export default function ZoneDetailsPage({
 
           <button
             onClick={() => navigate(`/zone/${nextZone.zone_id || nextZone.id}`)}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-mono text-slate-300"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-mono text-slate-600"
           >
             <span>Next</span>
             <ChevronRight className="w-4 h-4" />
@@ -113,21 +113,21 @@ export default function ZoneDetailsPage({
         {/* Right: Telemetry & Risk Details (7 Cols) */}
         <div className="lg:col-span-7 flex flex-col gap-4">
           {/* Risk Score Index Bar */}
-          <div className="bg-slate-950/90 rounded-2xl border border-slate-800 p-5 shadow-2xl">
+          <div className="bg-white/90 rounded-2xl border border-slate-200 p-5 shadow-sm">
             <div className="flex items-center justify-between gap-2 mb-2">
               <div>
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">AI Risk Prediction Model</span>
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">AI Risk Prediction Model</span>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-4xl font-black font-mono tracking-tight text-white">
+                  <span className="text-4xl font-black font-mono tracking-tight text-slate-900">
                     {riskScore.toFixed(2)}
                   </span>
-                  <span className="text-xs font-mono text-slate-400">/ 1.00</span>
+                  <span className="text-xs font-mono text-slate-500">/ 1.00</span>
                 </div>
               </div>
 
               <div className="text-right">
-                <span className="text-xs font-mono text-slate-400 block">Coordinates:</span>
-                <span className="font-mono text-xs text-cyan-300">
+                <span className="text-xs font-mono text-slate-500 block">Coordinates:</span>
+                <span className="font-mono text-xs text-cyan-700">
                   {currentZone?.latitude.toFixed(4)}°N, {currentZone?.longitude.toFixed(4)}°E
                 </span>
                 <span className="block text-[11px] font-mono text-slate-500 mt-1">
@@ -136,7 +136,7 @@ export default function ZoneDetailsPage({
               </div>
             </div>
 
-            <div className="w-full bg-slate-900 rounded-full h-3.5 p-0.5 border border-slate-800 mt-3 overflow-hidden">
+            <div className="w-full bg-white rounded-full h-3.5 p-0.5 border border-slate-200 mt-3 overflow-hidden">
               <div 
                 className={`h-full rounded-full transition-all duration-700 ${
                   riskLevel === 'HIGH' ? 'bg-gradient-to-r from-red-600 to-red-500' :

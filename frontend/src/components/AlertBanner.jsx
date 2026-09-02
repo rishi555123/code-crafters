@@ -35,15 +35,15 @@ export default function AlertBanner({
 
           <div>
             <div className="flex items-center gap-2">
-              <span className="bg-red-500 text-black font-extrabold text-[11px] px-2 py-0.5 rounded tracking-wider uppercase">
+              <span className="bg-red-500 text-white font-extrabold text-[11px] px-2 py-0.5 rounded tracking-wider uppercase">
                 EMERGENCY ALERT // GEOTECHNICAL FAILURE IMMINENT
               </span>
-              <span className="font-mono text-xs text-red-200">
+              <span className="font-mono text-xs text-red-50">
                 {new Date(primaryAlert.last_updated || Date.now()).toLocaleTimeString()}
               </span>
             </div>
 
-            <p className="text-sm font-bold text-red-100 mt-0.5">
+            <p className="text-sm font-bold text-red-50 mt-0.5">
               <span className="underline decoration-red-400 font-extrabold text-white text-base">
                 {primaryAlert.zone_name || primaryAlert.zone_id}
               </span>
@@ -71,7 +71,7 @@ export default function AlertBanner({
 
           <button
             onClick={() => onAcknowledge(primaryAlert.zone_id)}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-black/40 hover:bg-black/60 border border-red-500/50 text-red-200 text-xs font-semibold transition-all whitespace-nowrap"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-900/30 hover:bg-slate-900/50 border border-red-500/50 text-red-50 text-xs font-semibold transition-all whitespace-nowrap"
           >
             <span>Acknowledge Siren</span>
           </button>

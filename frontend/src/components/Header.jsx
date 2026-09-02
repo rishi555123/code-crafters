@@ -45,7 +45,7 @@ export default function Header({
   };
 
   return (
-    <header className="bg-slate-950 border-b border-slate-800/80 px-4 lg:px-6 py-3 sticky top-0 z-40 backdrop-blur-md">
+    <header className="bg-slate-50 border-b border-slate-200 px-4 lg:px-6 py-3 sticky top-0 z-40 backdrop-blur-md">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
         {/* Left: Branding & Nav Links */}
         <div className="flex items-center gap-4">
@@ -67,30 +67,30 @@ export default function Header({
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold font-mono tracking-widest text-cyan-400 uppercase bg-cyan-950/80 border border-cyan-800/60 px-1.5 py-0.5 rounded">
+                <span className="text-xs font-bold font-mono tracking-widest text-cyan-600 uppercase bg-cyan-50/80 border border-cyan-200/60 px-1.5 py-0.5 rounded">
                   SIH25071
                 </span>
-                <h1 className="text-base font-extrabold text-white tracking-wide">
-                  CODE CRAFTERS <span className="text-slate-400 font-normal">| Rockfall Early Warning</span>
+                <h1 className="text-base font-extrabold text-slate-900 tracking-wide">
+                  CODE CRAFTERS <span className="text-slate-500 font-normal">| Rockfall Early Warning</span>
                 </h1>
               </div>
-              <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+              <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
                 <span>Open-Pit Mine Geotechnical Safety</span>
                 <span>•</span>
-                <span className="font-mono text-cyan-400/90">Autonomous Slope Radar</span>
+                <span className="font-mono text-cyan-600/90">Autonomous Slope Radar</span>
               </div>
             </div>
           </div>
 
           {/* Primary Navigation Tabs */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-800 text-xs font-mono">
+          <nav className="hidden md:flex items-center gap-1 bg-white/90 p-1 rounded-xl border border-slate-200 text-xs font-mono">
             <NavLink
               to="/"
               className={({ isActive }) =>
                 `flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                   isActive
-                    ? 'bg-cyan-600 text-slate-950 font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                    ? 'bg-cyan-600 text-white font-bold shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
                 }`
               }
             >
@@ -103,8 +103,8 @@ export default function Header({
               className={({ isActive }) =>
                 `flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                   isActive
-                    ? 'bg-cyan-600 text-slate-950 font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                    ? 'bg-cyan-600 text-white font-bold shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
                 }`
               }
             >
@@ -119,13 +119,13 @@ export default function Header({
           {/* Active Alerts Pill */}
           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold transition-all ${
             activeAlertsCount > 0
-              ? 'bg-red-950/60 border-red-800 text-red-300 animate-pulse shadow-lg shadow-red-950/50'
-              : 'bg-emerald-950/30 border-emerald-800/50 text-emerald-400'
+              ? 'bg-red-50/60 border-red-200 text-red-700 animate-pulse shadow-lg shadow-red-950/50'
+              : 'bg-emerald-50 border-emerald-200 text-emerald-600'
           }`}>
             {activeAlertsCount > 0 ? (
-              <AlertTriangle className="w-4 h-4 text-red-400" />
+              <AlertTriangle className="w-4 h-4 text-red-600" />
             ) : (
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
             )}
             <span>{activeAlertsCount > 0 ? `${activeAlertsCount} HIGH ALERTS` : 'SLOPES NORMAL'}</span>
           </div>
@@ -136,10 +136,10 @@ export default function Header({
             title="Click to toggle Live Backend API vs Mock Simulator Mode"
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all ${
               isMockMode
-                ? 'bg-purple-950/50 border-purple-800/60 text-purple-300 hover:bg-purple-900/50'
+                ? 'bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100'
                 : backendConnected
-                ? 'bg-slate-900 border-slate-700 text-slate-300 hover:border-slate-600'
-                : 'bg-amber-950/50 border-amber-800/60 text-amber-300'
+                ? 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                : 'bg-amber-50/50 border-amber-200/60 text-amber-700'
             }`}
           >
             <Server className="w-3.5 h-3.5" />
@@ -152,8 +152,8 @@ export default function Header({
             onClick={toggleSound}
             className={`p-2 rounded-lg border transition-all ${
               isMuted 
-                ? 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300' 
-                : 'bg-slate-900 border-slate-700 text-cyan-400 hover:border-cyan-500/50'
+                ? 'bg-white border-slate-200 text-slate-500 hover:text-slate-600' 
+                : 'bg-white border-slate-200 text-cyan-600 hover:border-cyan-500/50'
             }`}
             title={isMuted ? "Unmute Audio Alarm" : "Mute Audio Alarm"}
           >
@@ -165,23 +165,23 @@ export default function Header({
         <div className="flex items-center gap-2">
           <button
             onClick={onOpenCVModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500/50 text-xs font-medium text-slate-200 transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 hover:border-cyan-500/50 text-xs font-medium text-slate-700 transition-all shadow-sm"
           >
-            <Camera className="w-3.5 h-3.5 text-cyan-400" />
+            <Camera className="w-3.5 h-3.5 text-cyan-600" />
             <span className="hidden sm:inline">CV Crack AI</span>
           </button>
 
           <button
             onClick={onOpenDemoDrawer}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs transition-all shadow-md shadow-cyan-950/60"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition-all shadow-md shadow-cyan-950/60"
           >
             <Sliders className="w-3.5 h-3.5" />
             <span>Demo Scenarios</span>
           </button>
 
           {/* Clock */}
-          <div className="hidden xl:flex flex-col text-right font-mono border-l border-slate-800 pl-3 ml-1">
-            <span className="text-xs font-semibold text-slate-200">
+          <div className="hidden xl:flex flex-col text-right font-mono border-l border-slate-200 pl-3 ml-1">
+            <span className="text-xs font-semibold text-slate-700">
               {currentTime.toLocaleTimeString('en-US', { hour12: false })}
             </span>
             <span className="text-[10px] text-slate-500">

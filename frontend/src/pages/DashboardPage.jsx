@@ -53,16 +53,16 @@ export default function DashboardPage({
         </div>
 
         {/* Quick Incidents & Geotechnical Safety Card (4 Cols) */}
-        <div className="lg:col-span-4 bg-slate-950/90 rounded-2xl border border-slate-800 p-5 shadow-2xl backdrop-blur-md flex flex-col justify-between">
+        <div className="lg:col-span-4 bg-white/90 rounded-2xl border border-slate-200 p-5 shadow-sm backdrop-blur-md flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
               <div className="flex items-center gap-2">
                 <History className="w-4 h-4 text-indigo-400" />
-                <h3 className="text-sm font-bold text-white">Recent Slope Incidents</h3>
+                <h3 className="text-sm font-bold text-slate-900">Recent Slope Incidents</h3>
               </div>
               <button
                 onClick={() => navigate('/incidents')}
-                className="text-xs font-mono text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1"
+                className="text-xs font-mono text-cyan-600 hover:text-cyan-700 font-semibold flex items-center gap-1"
               >
                 <span>View All ({incidents.length})</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -74,20 +74,20 @@ export default function DashboardPage({
                 <div 
                   key={inc.id}
                   onClick={() => navigate(`/incident/${inc.id}`)}
-                  className="p-3 rounded-xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-indigo-500/40 cursor-pointer transition-all group"
+                  className="p-3 rounded-xl bg-white/90 hover:bg-white border border-slate-200 hover:border-indigo-500/40 cursor-pointer transition-all group"
                 >
                   <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="font-mono font-bold text-cyan-400 group-hover:text-cyan-300 flex items-center gap-1">
+                    <span className="font-mono font-bold text-cyan-600 group-hover:text-cyan-700 flex items-center gap-1">
                       <span>{inc.zone_name || inc.zone_id}</span>
                       <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </span>
                     <span className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
-                      inc.status === 'ACTIVE EMERGENCY' ? 'bg-red-600 text-white animate-pulse' : 'bg-emerald-950 text-emerald-300 border border-emerald-800'
+                      inc.status === 'ACTIVE EMERGENCY' ? 'bg-red-600 text-white animate-pulse' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     }`}>
                       {inc.status || 'RESOLVED'}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-400 truncate">
+                  <div className="text-[11px] text-slate-500 truncate">
                     {inc.weather_conditions} • Def: {inc.deformation_mm}mm
                   </div>
                   <div className="text-[10px] font-mono text-slate-500 mt-1">
@@ -99,11 +99,11 @@ export default function DashboardPage({
           </div>
 
           {/* Quick Demo Trigger Footer */}
-          <div className="pt-3 border-t border-slate-800/80 mt-4 flex items-center justify-between">
+          <div className="pt-3 border-t border-slate-200 mt-4 flex items-center justify-between">
             <span className="text-[11px] font-mono text-slate-500">SIH 2026 Presentation</span>
             <button
               onClick={onOpenDemoDrawer}
-              className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-xs font-mono font-bold transition-all shadow-md shadow-cyan-950/60"
+              className="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-mono font-bold transition-all shadow-md shadow-cyan-950/60"
             >
               Launch 4-Stage Demo
             </button>
