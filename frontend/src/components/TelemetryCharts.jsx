@@ -56,12 +56,12 @@ export default function TelemetryCharts({ selectedZone }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-950 border border-slate-700 p-2.5 rounded-xl shadow-xl font-mono text-xs text-slate-200">
-          <div className="text-slate-400 font-bold mb-1">{label}</div>
+        <div className="bg-slate-50 border border-slate-200 p-2.5 rounded-xl shadow-xl font-mono text-xs text-slate-700">
+          <div className="text-slate-500 font-bold mb-1">{label}</div>
           {payload.map((entry, index) => (
             <div key={`item-${index}`} className="flex items-center justify-between gap-4">
               <span style={{ color: entry.color }}>{entry.name}:</span>
-              <strong className="text-white">{entry.value}</strong>
+              <strong className="text-slate-900">{entry.value}</strong>
             </div>
           ))}
         </div>
@@ -71,27 +71,27 @@ export default function TelemetryCharts({ selectedZone }) {
   };
 
   return (
-    <div className="bg-slate-950/90 rounded-2xl border border-slate-800 p-5 shadow-2xl backdrop-blur-md flex flex-col gap-4">
+    <div className="bg-white/90 rounded-2xl border border-slate-200 p-5 shadow-sm backdrop-blur-md flex flex-col gap-4">
       {/* Header with Switcher Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-indigo-950/80 rounded-lg border border-indigo-800/60 text-indigo-400">
+          <div className="p-1.5 bg-indigo-50 rounded-lg border border-indigo-200 text-indigo-600">
             <TrendingUp className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white">Real-Time Telemetry Trendlines</h3>
-            <span className="text-[11px] font-mono text-slate-400">Multi-parameter geotechnical monitoring</span>
+            <h3 className="text-sm font-bold text-slate-900">Real-Time Telemetry Trendlines</h3>
+            <span className="text-[11px] font-mono text-slate-500">Multi-parameter geotechnical monitoring</span>
           </div>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs font-mono">
+        <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 text-xs font-mono">
           <button
             onClick={() => setActiveTab('deformation')}
             className={`px-3 py-1 rounded-md transition-all ${
               activeTab === 'deformation'
-                ? 'bg-cyan-600 text-slate-950 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-cyan-600 text-white font-bold shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             Deformation (mm)
@@ -101,7 +101,7 @@ export default function TelemetryCharts({ selectedZone }) {
             className={`px-3 py-1 rounded-md transition-all ${
               activeTab === 'risk'
                 ? 'bg-red-600 text-white font-bold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             Risk Score
@@ -110,8 +110,8 @@ export default function TelemetryCharts({ selectedZone }) {
             onClick={() => setActiveTab('vibration')}
             className={`px-3 py-1 rounded-md transition-all ${
               activeTab === 'vibration'
-                ? 'bg-amber-600 text-slate-950 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-amber-600 text-white font-bold shadow-sm'
+                : 'text-slate-500 hover:text-slate-700'
             }`}
           >
             Vibration & Rain
@@ -196,7 +196,7 @@ export default function TelemetryCharts({ selectedZone }) {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-2 border-t border-slate-800/80">
+      <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-2 border-t border-slate-200">
         <span>Sampling Interval: 1.0s</span>
         <span>Filter: EWMA Noise Smoothing (Dikshitha Model Calibrated)</span>
       </div>

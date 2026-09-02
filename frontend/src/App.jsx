@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import AlertBanner from './components/AlertBanner';
 import CameraInspectorModal from './components/CameraInspectorModal';
@@ -37,6 +37,14 @@ function AppContent() {
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const [currentScenarioId, setCurrentScenarioId] = useState(1);
   const [incidents, setIncidents] = useState([]);
+
+  // Close any open modal/drawer whenever the route changes, so they never
+  // stay mounted on top of a page the user has navigated away from.
+  const location = useLocation();
+  useEffect(() => {
+    setIsCVModalOpen(false);
+    setIsDemoDrawerOpen(false);
+  }, [location.pathname]);
 
   // Fetch telemetry
   const fetchTelemetry = useCallback(async () => {
@@ -150,7 +158,7 @@ function AppContent() {
   const currentSelectedZone = zones.find(z => (z.zone_id || z.id) === selectedZoneId) || zones[0];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500/30">
+    <div className="min-h-screen bg-slate-50 text-white flex flex-col font-sans selection:bg-cyan-500/30">
       {/* Header */}
       <Header
         activeAlertsCount={activeAlertZones.length}

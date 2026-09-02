@@ -38,22 +38,22 @@ export default function IncidentHistory({
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="bg-slate-950 border border-slate-800 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
         {/* Modal Header */}
-        <div className="bg-slate-900 px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <div className="bg-white px-6 py-4 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-950 rounded-xl border border-indigo-800/60 text-indigo-400">
+            <div className="p-2 bg-indigo-50 rounded-xl border border-indigo-200 text-indigo-600">
               <History className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
                 <span>Geotechnical Incident & Rockfall History</span>
-                <span className="text-xs font-mono bg-indigo-950 text-indigo-400 border border-indigo-800 px-2 py-0.5 rounded">
+                <span className="text-xs font-mono bg-indigo-50 text-indigo-600 border border-indigo-200 px-2 py-0.5 rounded">
                   GET /api/incidents
                 </span>
               </h2>
-              <span className="text-xs font-mono text-slate-400">
+              <span className="text-xs font-mono text-slate-500">
                 Audit Trail & Historical Slope Failures
               </span>
             </div>
@@ -61,14 +61,14 @@ export default function IncidentHistory({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
+            className="p-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Filters and Search Bar */}
-        <div className="p-4 bg-slate-900/60 border-b border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="p-4 bg-white/90 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="relative w-full sm:w-80">
             <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -76,7 +76,7 @@ export default function IncidentHistory({
               placeholder="Search by zone, incident ID, weather..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 font-mono"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-700 placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 font-mono"
             />
           </div>
 
@@ -85,7 +85,7 @@ export default function IncidentHistory({
             <select
               value={filterSeverity}
               onChange={(e) => setFilterSeverity(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-300 font-mono focus:outline-none focus:border-cyan-500/50"
+              className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs text-slate-600 font-mono focus:outline-none focus:border-cyan-500/50"
             >
               <option value="ALL">All Severities</option>
               <option value="CRITICAL">Critical</option>
@@ -102,9 +102,9 @@ export default function IncidentHistory({
               No historical incident records match the filter criteria.
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-xl border border-slate-800">
+            <div className="overflow-x-auto rounded-xl border border-slate-200">
               <table className="w-full text-left text-xs font-mono">
-                <thead className="bg-slate-900 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800">
+                <thead className="bg-white text-slate-500 text-[11px] uppercase tracking-wider border-b border-slate-200">
                   <tr>
                     <th className="px-4 py-3">Incident ID</th>
                     <th className="px-4 py-3">Sector</th>
@@ -116,19 +116,19 @@ export default function IncidentHistory({
                     <th className="px-4 py-3">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/80 bg-slate-950/60">
+                <tbody className="divide-y divide-slate-200 bg-white/70">
                   {filteredIncidents.map((inc) => {
                     const isHigh = inc.risk_score_before_event >= 0.75 || inc.crack_severity === 'CRITICAL';
 
                     return (
-                      <tr key={inc.id} className="hover:bg-slate-900/50 transition-colors">
-                        <td className="px-4 py-3 font-bold text-cyan-400">
+                      <tr key={inc.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-4 py-3 font-bold text-cyan-600">
                           {inc.id}
                         </td>
-                        <td className="px-4 py-3 font-semibold text-white whitespace-nowrap">
+                        <td className="px-4 py-3 font-semibold text-slate-900 whitespace-nowrap">
                           {inc.zone_name || inc.zone_id}
                         </td>
-                        <td className="px-4 py-3 text-slate-400 whitespace-nowrap">
+                        <td className="px-4 py-3 text-slate-500 whitespace-nowrap">
                           {new Date(inc.event_time).toLocaleString('en-US', {
                             month: 'short',
                             day: 'numeric',
@@ -138,25 +138,25 @@ export default function IncidentHistory({
                         </td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-0.5 rounded font-bold ${
-                            isHigh ? 'bg-red-950 text-red-300 border border-red-800' : 'bg-amber-950 text-amber-300 border border-amber-800'
+                            isHigh ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
                           }`}>
                             {Number(inc.risk_score_before_event).toFixed(2)}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-slate-200">
+                        <td className="px-4 py-3 text-slate-700">
                           {inc.deformation_mm} mm
                         </td>
-                        <td className="px-4 py-3 text-slate-300 max-w-[200px] truncate">
+                        <td className="px-4 py-3 text-slate-600 max-w-[200px] truncate">
                           {inc.weather_conditions}
                         </td>
-                        <td className="px-4 py-3 text-slate-400 max-w-[220px] truncate">
+                        <td className="px-4 py-3 text-slate-500 max-w-[220px] truncate">
                           {inc.action_taken || 'Siren activated, zone evacuated'}
                         </td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             inc.status === 'ACTIVE EMERGENCY' 
                               ? 'bg-red-600 text-white animate-pulse' 
-                              : 'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                              : 'bg-emerald-50 text-emerald-600 border border-emerald-200'
                           }`}>
                             {inc.status || 'RESOLVED'}
                           </span>
