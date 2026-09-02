@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #080b11;
+    color: #e2e8f0;
+  }
+  
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d131f;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Leaflet dark map styling overrides */
+.leaflet-container {
+  background: #0a0e17 !important;
+  font-family: inherit !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-popup-tip {
+  background: #0f172a !important;
+  border: 1px solid #334155 !important;
+}
+
+/* Radar scan effect */
+.radar-grid {
+  background-image: 
+    linear-gradient(rgba(30, 41, 59, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 41, 59, 0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.glow-high {
+  box-shadow: 0 0 25px -5px rgba(239, 68, 68, 0.5), inset 0 0 15px -5px rgba(239, 68, 68, 0.3);
+}
+
+.glow-warning {
+  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.4), inset 0 0 15px -5px rgba(245, 158, 11, 0.2);
+}
+
+.glow-safe {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3), inset 0 0 15px -5px rgba(16, 185, 129, 0.1);
+}
+
