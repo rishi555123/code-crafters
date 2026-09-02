@@ -9,17 +9,27 @@ export default function AlertBanner({
   isMuted,
   onToggleSound
 }) {
-  if (!alertZones || alertZones.length === 0) return null;
+  const hasAlert = !!(alertZones && alertZones.length > 0);
+  const primaryAlert = hasAlert ? alertZones[0] : null;
 
-  const primaryAlert = alertZones[0];
+  // Stable key that only changes when the actual set of alerting zones
+  // changes - NOT a new array reference on every polling re-render.
+  const alertKey = hasAlert
+    ? alertZones.map(z => z.zone_id || z.id).sort().join(',')
+    : '';
 
   useEffect(() => {
-    // Fire continuous alarm when high-risk alert banner appears
-    soundService.startContinuousAlarm();
+    if (!hasAlert) return;
+    // Ring the siren for up to 5 seconds when a red-zone alert appears,
+    // then it stops on its own (no need to wait for Acknowledge).
+    soundService.startContinuousAlarm(5000);
     return () => {
       soundService.stopAlarm();
     };
-  }, [alertZones]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [alertKey]);
+
+  if (!hasAlert) return null;
 
   return (
     <div className="bg-gradient-to-r from-red-950 via-red-900 to-red-950 border-y-2 border-red-600 text-white px-4 py-3 shadow-2xl shadow-red-950/80 relative overflow-hidden animate-pulse-fast">

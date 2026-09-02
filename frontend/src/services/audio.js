@@ -89,18 +89,38 @@ class SoundService {
     }
   }
 
-  startContinuousAlarm() {
-    if (this.alertInterval || this.muted) return;
+  // durationMs: if provided, the siren auto-stops after that many ms
+  // (e.g. 5000 -> rings for up to 5 seconds then goes silent on its own).
+  // If the alarm is already ringing, this is a no-op so re-renders don't
+  // restart/stack the siren.
+  startContinuousAlarm(durationMs = null) {
+    if (this.muted) return;
+    if (this.alertInterval) return;
+
     this.playCriticalAlarm();
     this.alertInterval = setInterval(() => {
       this.playCriticalAlarm();
     }, 1200);
+
+    if (this.alertTimeout) {
+      clearTimeout(this.alertTimeout);
+      this.alertTimeout = null;
+    }
+    if (durationMs) {
+      this.alertTimeout = setTimeout(() => {
+        this.stopAlarm();
+      }, durationMs);
+    }
   }
 
   stopAlarm() {
     if (this.alertInterval) {
       clearInterval(this.alertInterval);
       this.alertInterval = null;
+    }
+    if (this.alertTimeout) {
+      clearTimeout(this.alertTimeout);
+      this.alertTimeout = null;
     }
   }
 

@@ -29,6 +29,10 @@ export default function DashboardPage({
             onSelectZone={(zoneId) => {
               onSelectZone(zoneId);
             }}
+            onInspectZone={(zoneId) => {
+              onSelectZone(zoneId);
+              navigate(`/zone/${zoneId}`);
+            }}
             className="h-full min-h-[480px]"
           />
         </div>

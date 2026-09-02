@@ -122,7 +122,7 @@ function AppContent() {
     setAcknowledgedAlerts(prev => ({ ...prev, [selectedZoneId]: false }));
 
     if (result && result.hysteresisFired) {
-      soundService.startContinuousAlarm();
+      soundService.startContinuousAlarm(5000);
     } else if (scenarioId === 1) {
       soundService.playSuccess();
     } else {
