@@ -20,14 +20,26 @@ import {
   WifiOff 
 } from 'lucide-react';
 
-// Component to handle map center changes smoothly
-function MapRecenter({ center, zoom }) {
+// Component to handle map center changes smoothly.
+// IMPORTANT: takes lat/lng as plain numbers (not an array/object) and only
+// flies when they actually change. Previously this received a brand-new
+// `[lat, lng]` array on every parent re-render (every telemetry poll),
+// which made the effect fire and call flyTo() over and over even though
+// the zone hadn't moved - that repeated flyTo() is what looked like the
+// map/screen "shaking" every couple seconds.
+function MapRecenter({ lat, lng, zoom }) {
   const map = useMap();
+  const prevPos = React.useRef({ lat: null, lng: null });
+
   React.useEffect(() => {
-    if (center) {
-      map.flyTo(center, zoom || 15, { duration: 1.2 });
+    if (lat == null || lng == null) return;
+    if (prevPos.current.lat === lat && prevPos.current.lng === lng) {
+      return; // same position as before - don't re-trigger the flight
     }
-  }, [center, zoom, map]);
+    prevPos.current = { lat, lng };
+    map.flyTo([lat, lng], zoom || map.getZoom(), { duration: 1.2 });
+  }, [lat, lng, zoom, map]);
+
   return null;
 }
 
@@ -69,7 +81,7 @@ const createZoneIcon = (riskLevel, isStale, isSelected, zoneId) => {
              style="background-color: ${color}; box-shadow: 0 0 15px ${glowColor}; border: 2px solid #ffffff;">
           ${zoneId ? zoneId.replace('SLOPE_', '') : 'Z'}
         </div>
-        <span class="mt-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider text-slate-900 shadow-sm"
+        <span class="mt-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider text-white shadow-sm"
               style="background-color: rgba(15, 23, 42, 0.9); border: 1px solid ${color};">
           ${badgeText}
         </span>
@@ -90,6 +102,7 @@ export default function MineMap({
   zones = [],
   selectedZoneId = 'SLOPE_A',
   onSelectZone,
+  onInspectZone,
   className = ''
 }) {
   const [mapType, setMapType] = useState('satellite'); // satellite, dark, topo
@@ -185,7 +198,7 @@ export default function MineMap({
             maxZoom={18}
           />
 
-          <MapRecenter center={centerPos} zoom={15} />
+          <MapRecenter lat={centerPos[0]} lng={centerPos[1]} zoom={15} />
 
           {/* Render Slope Sector Polygons */}
           {zones.map((zone) => {
@@ -281,7 +294,7 @@ export default function MineMap({
                     </div>
 
                     <button
-                      onClick={() => onSelectZone(zId)}
+                      onClick={() => (onInspectZone || onSelectZone)(zId)}
                       className="w-full mt-1 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg text-xs transition-all text-center flex items-center justify-center gap-1"
                     >
                       <Eye className="w-3.5 h-3.5" />
