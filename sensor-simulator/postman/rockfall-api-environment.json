@@ -1,0 +1,43 @@
+{
+  "id": "rockfall-api-env-2026",
+  "name": "Rockfall Prediction - Local",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8001",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "realBackendUrl",
+      "value": "http://localhost:8080",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "cvUrl",
+      "value": "http://localhost:8000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "mlUrl",
+      "value": "http://127.0.0.1:9000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "zoneId",
+      "value": "SLOPE_A",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}
